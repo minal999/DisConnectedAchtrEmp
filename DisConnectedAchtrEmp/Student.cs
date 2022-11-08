@@ -11,44 +11,42 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 
-
 namespace DisConnectedAchtrEmp
 {
-    public partial class Form1 : Form
+    public partial class Student : Form
     {
         SqlConnection con;
         SqlDataAdapter da;
         SqlCommandBuilder scb;
         DataSet ds;
-        public Form1()
+        public Student()
         {
             InitializeComponent();
             string constr = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
             con = new SqlConnection(constr);
-
-
         }
-        public DataSet GetAllEmp()
+        public DataSet GetAllStudent()
         {
-            da = new SqlDataAdapter("select * from Emp", con);
+            da = new SqlDataAdapter("select * from student", con);
             da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
             scb = new SqlCommandBuilder(da);
             ds = new DataSet();
-            da.Fill(ds, "emp");// Emp is a table name given to DataTable
+            da.Fill(ds, "student");
             return ds;
         }
-
-
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].NewRow();
+                ds = GetAllStudent();
+                DataRow row = ds.Tables["student"].NewRow();
                 row["name"] = txtName.Text;
-                row["salary"] = txtSalary.Text;
-                ds.Tables["emp"].Rows.Add(row);
-                int result = da.Update(ds.Tables["emp"]);
+                row["Sub1"] = txtSub1.Text;
+                row["Sub2"] = txtSub2.Text;
+                row["Sub3"] = txtSub3.Text;
+                row["Percentage"] = txtPer.Text;
+                ds.Tables["student"].Rows.Add(row);
+                int result = da.Update(ds.Tables["student"]);
                 if (result == 1)
                 {
                     MessageBox.Show("Record inserted");
@@ -65,13 +63,16 @@ namespace DisConnectedAchtrEmp
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].Rows.Find(txtID.Text);
+                ds = GetAllStudent();
+                DataRow row = ds.Tables["student"].Rows.Find(txtID.Text);
                 if (row != null)
                 {
                     row["name"] = txtName.Text;
-                    row["salary"] = txtSalary.Text;
-                    int result = da.Update(ds.Tables["emp"]);
+                    row["Sub1"] = txtSub1.Text;
+                    row["Sub2"] = txtSub2.Text;
+                    row["Sub3"] = txtSub3.Text;
+                    row["Percentage"] = txtPer.Text;
+                    int result = da.Update(ds.Tables["student"]);
                     if (result == 1)
                     {
                         MessageBox.Show("Record updated");
@@ -84,19 +85,18 @@ namespace DisConnectedAchtrEmp
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].Rows.Find(txtID.Text);
+                ds = GetAllStudent();
+                DataRow row = ds.Tables["student"].Rows.Find(txtID.Text);
                 if (row != null)
                 {
                     row.Delete();
-                    int result = da.Update(ds.Tables["emp"]);
+                    int result = da.Update(ds.Tables["student"]);
                     if (result == 1)
                     {
                         MessageBox.Show("Record deleted");
@@ -109,19 +109,21 @@ namespace DisConnectedAchtrEmp
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].Rows.Find(txtID.Text);
+                ds = GetAllStudent();
+                DataRow row = ds.Tables["student"].Rows.Find(txtID.Text);
                 if (row != null)
                 {
                     txtName.Text = row["name"].ToString();
-                    txtSalary.Text = row["salary"].ToString();
+                    txtSub1.Text = row["Sub1"].ToString();
+                    txtSub2.Text = row["Sub2"].ToString();
+                    txtSub3.Text = row["Sub3"].ToString();
+                    txtPer.Text = row["Percentage"].ToString();
                 }
                 else
                 {
@@ -133,22 +135,20 @@ namespace DisConnectedAchtrEmp
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void btnShowAll_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                dataGridView1.DataSource = ds.Tables["emp"];
+                ds = GetAllStudent();
+                dataGridView1.DataSource = ds.Tables["student"];
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
     }
 }

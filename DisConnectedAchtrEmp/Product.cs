@@ -14,41 +14,41 @@ using System.Data;
 
 namespace DisConnectedAchtrEmp
 {
-    public partial class Form1 : Form
+    public partial class Product : Form
     {
         SqlConnection con;
         SqlDataAdapter da;
         SqlCommandBuilder scb;
         DataSet ds;
-        public Form1()
+
+        public Product()
         {
             InitializeComponent();
             string constr = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
             con = new SqlConnection(constr);
 
-
         }
-        public DataSet GetAllEmp()
+        public DataSet GetAllProduct()
         {
-            da = new SqlDataAdapter("select * from Emp", con);
+            da = new SqlDataAdapter("select * from product", con);
             da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
             scb = new SqlCommandBuilder(da);
             ds = new DataSet();
-            da.Fill(ds, "emp");// Emp is a table name given to DataTable
+            da.Fill(ds, "product");
             return ds;
         }
-
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].NewRow();
+                ds = GetAllProduct();
+                DataRow row = ds.Tables["product"].NewRow();
                 row["name"] = txtName.Text;
-                row["salary"] = txtSalary.Text;
-                ds.Tables["emp"].Rows.Add(row);
-                int result = da.Update(ds.Tables["emp"]);
+                row["price"] = txtPrice.Text;
+                row["company_Name"] = txtCompany.Text;
+                ds.Tables["product"].Rows.Add(row);
+                int result = da.Update(ds.Tables["product"]);
                 if (result == 1)
                 {
                     MessageBox.Show("Record inserted");
@@ -65,13 +65,14 @@ namespace DisConnectedAchtrEmp
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].Rows.Find(txtID.Text);
+                ds = GetAllProduct();
+                DataRow row = ds.Tables["product"].Rows.Find(txtID.Text);
                 if (row != null)
                 {
                     row["name"] = txtName.Text;
-                    row["salary"] = txtSalary.Text;
-                    int result = da.Update(ds.Tables["emp"]);
+                    row["price"] = txtPrice.Text;
+                    row["company_Name"] = txtCompany.Text;
+                    int result = da.Update(ds.Tables["product"]);
                     if (result == 1)
                     {
                         MessageBox.Show("Record updated");
@@ -84,19 +85,18 @@ namespace DisConnectedAchtrEmp
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].Rows.Find(txtID.Text);
+                ds = GetAllProduct();
+                DataRow row = ds.Tables["product"].Rows.Find(txtID.Text);
                 if (row != null)
                 {
                     row.Delete();
-                    int result = da.Update(ds.Tables["emp"]);
+                    int result = da.Update(ds.Tables["product"]);
                     if (result == 1)
                     {
                         MessageBox.Show("Record deleted");
@@ -109,19 +109,19 @@ namespace DisConnectedAchtrEmp
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                DataRow row = ds.Tables["emp"].Rows.Find(txtID.Text);
+                ds = GetAllProduct();
+                DataRow row = ds.Tables["product"].Rows.Find(txtID.Text);
                 if (row != null)
                 {
                     txtName.Text = row["name"].ToString();
-                    txtSalary.Text = row["salary"].ToString();
+                    txtPrice.Text = row["price"].ToString();
+                    txtCompany.Text = row["company_Name"].ToString();
                 }
                 else
                 {
@@ -133,22 +133,20 @@ namespace DisConnectedAchtrEmp
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void btnShowAll_Click(object sender, EventArgs e)
         {
             try
             {
-                ds = GetAllEmp();
-                dataGridView1.DataSource = ds.Tables["emp"];
+                ds = GetAllProduct();
+                dataGridView1.DataSource = ds.Tables["product"];
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
     }
 }
